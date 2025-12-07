@@ -318,7 +318,7 @@ async function generateICO() {
     const url = URL.createObjectURL(icoBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${selectedIcon}.ico`;
+    a.download = `icon-${selectedIcon}.ico`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -393,7 +393,7 @@ function downloadPNG(size) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${selectedIcon}-${size}x${size}.png`;
+    a.download = `icon-${selectedIcon}-${size}x${size}.png`;
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
@@ -539,7 +539,7 @@ async function generateSVG() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${selectedIcon}.svg`;
+    a.download = `icon-${selectedIcon}.svg`;
     a.click();
     URL.revokeObjectURL(url);
 
