@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favicon Generator - Material Icons</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Load all Material Icons font variants -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
+</head>
+<body>
+  <div class="header">
+    <h1>🎨 Favicon Generator</h1>
+    <p>Create favicon.ico from Material Design Icons - for publish.slions.net</p>
+  </div>
+
+  <div class="container">
+    <h2>1. Choose Material Icon</h2>
+
+    <div style="margin-bottom: 20px;">
+      <label for="iconStyleSelect" style="font-weight: 500; margin-right: 10px;">Icon Style:</label>
+      <select id="iconStyleSelect" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; cursor: pointer;">
+        <option value="filled">Filled (default)</option>
+        <option value="outlined">Outlined</option>
+        <option value="rounded">Rounded</option>
+        <option value="sharp">Sharp</option>
+        <option value="two-tone">Two Tone</option>
+      </select>
+      <span id="iconCount" style="margin-left: 15px; color: #757575; font-size: 14px;">Loading icons...</span>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="iconSearch" placeholder="🔍 Search icons... (e.g., home, star, cloud, rocket)" />
+    </div>
+
+    <div class="icon-grid" id="iconGrid">
+      <!-- Icons loaded by JavaScript -->
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>2. Customize Colors</h2>
+
+    <div class="color-controls">
+      <div class="color-option">
+        <label>Icon Color:</label>
+        <input type="color" id="iconPicker" value="#424242">
+        <input type="text" id="iconInput" value="#424242" maxlength="7">
+      </div>
+
+      <div class="color-option">
+        <label>Background:</label>
+        <input type="color" id="backgroundPicker" value="#FFFFFF">
+        <input type="text" id="backgroundInput" value="#FFFFFF" maxlength="7">
+      </div>
+
+      <div class="color-option">
+        <label>Accent Color:</label>
+        <input type="color" id="secondaryPicker" value="#FF9800">
+        <input type="text" id="secondaryInput" value="#FF9800" maxlength="7">
+      </div>
+
+      <div class="color-option">
+        <label>Primary:</label>
+        <input type="color" id="primaryPicker" value="#2196F3">
+        <input type="text" id="primaryInput" value="#2196F3" maxlength="7">
+      </div>
+    </div>
+
+    <div style="margin: 15px 0;">
+      <label>
+        <input type="checkbox" id="addAccent">
+        Add accent dot in corner
+      </label>
+    </div>
+
+    <div class="button-group">
+      <button onclick="resetDefaults()">Reset to Defaults</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>3. Preview</h2>
+
+    <div class="preview-section">
+      <div class="preview-item">
+        <h4>16×16</h4>
+        <canvas id="preview16" width="16" height="16"></canvas>
+        <small>Browser tab</small>
+      </div>
+
+      <div class="preview-item">
+        <h4>32×32</h4>
+        <canvas id="preview32" width="32" height="32"></canvas>
+        <small>Bookmarks bar</small>
+      </div>
+
+      <div class="preview-item">
+        <h4>48×48</h4>
+        <canvas id="preview48" width="48" height="48"></canvas>
+        <small>Windows site icon</small>
+      </div>
+
+      <div class="preview-item">
+        <h4>64×64</h4>
+        <canvas id="preview64" width="64" height="64"></canvas>
+        <small>High DPI displays</small>
+      </div>
+
+      <div class="preview-item">
+        <h4>128×128</h4>
+        <canvas id="preview128" width="128" height="128"></canvas>
+        <small>Chrome Web Store</small>
+      </div>
+
+      <div class="preview-item">
+        <h4>256×256</h4>
+        <canvas id="preview256" width="256" height="256"></canvas>
+        <small>High-res displays</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>4. Download</h2>
+
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+    <div class="button-group">
+      <button onclick="generateICO()" class="success">
+        📥 Generate & Download favicon.ico
+      </button>
+    </div>
+
+    <p style="text-align: center; color: #757575; margin: 20px 0;">
+      The .ico file includes all sizes (16, 32, 48, 64, 128, 256px)
+    </p>
+
+    <details>
+      <summary style="cursor: pointer; font-weight: 500; margin: 15px 0;">
+        Or download individual PNG files
+      </summary>
+      <div class="button-group" style="margin-top: 15px;">
+        <button onclick="downloadPNG(16)">16×16 PNG</button>
+        <button onclick="downloadPNG(32)">32×32 PNG</button>
+        <button onclick="downloadPNG(48)">48×48 PNG</button>
+        <button onclick="downloadPNG(64)">64×64 PNG</button>
+        <button onclick="downloadPNG(128)">128×128 PNG</button>
+        <button onclick="downloadPNG(256)">256×256 PNG</button>
+      </div>
+    </details>
+  </div>
+
+  <div class="container instructions">
+    <h3>📖 How to Use Your Favicon</h3>
+    <ol>
+      <li>Choose a Material Design icon from the grid above</li>
+      <li>Customize colors to match your brand</li>
+      <li>Preview at different sizes</li>
+      <li>Click "Generate & Download favicon.ico"</li>
+      <li>Upload <code>favicon.ico</code> to your website's root directory</li>
+      <li>Add to your HTML <code>&lt;head&gt;</code> (optional):
+        <pre style="background: white; padding: 10px; margin: 10px 0; border-radius: 4px; overflow-x: auto;">&lt;link rel="icon" type="image/x-icon" href="/favicon.ico"&gt;</pre>
+      </li>
+      <li>Clear browser cache and reload to see your new favicon!</li>
+    </ol>
+
+    <p><strong>Note:</strong> The generated .ico file contains multiple sizes optimized for different contexts (browser tabs, bookmarks, shortcuts, etc.)</p>
+  </div>
+
+  <script src="generator.js"></script>
+</body>
+</html>

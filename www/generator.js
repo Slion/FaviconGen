@@ -1,0 +1,451 @@
+// Comprehensive Material Design Icons List (500+ icons)
+const MATERIAL_ICONS = [
+  // Common Actions
+  'home', 'menu', 'search', 'settings', 'favorite', 'star', 'person', 'account_circle',
+  'dashboard', 'shopping_cart', 'notifications', 'mail', 'email', 'inbox', 'send',
+  'cloud', 'cloud_upload', 'cloud_download', 'cloud_done', 'file_download', 'file_upload',
+  'check', 'close', 'done', 'clear', 'add', 'remove', 'delete', 'edit', 'create',
+  'save', 'archive', 'bookmark', 'flag', 'folder', 'work', 'build', 'bug_report',
+  'refresh', 'sync', 'update', 'cached', 'restore', 'undo', 'redo', 'content_copy',
+  'content_cut', 'content_paste', 'link', 'open_in_new', 'open_in_browser', 'launch',
+
+  // Time & Calendar
+  'calendar_today', 'event', 'alarm', 'schedule', 'timer', 'watch', 'today',
+  'date_range', 'event_available', 'event_busy', 'alarm_on', 'alarm_off', 'hourglass_empty',
+  'history', 'access_time', 'query_builder', 'schedule_send', 'timelapse',
+
+  // Communication
+  'call', 'phone', 'phone_in_talk', 'smartphone', 'tablet', 'computer', 'laptop',
+  'chat', 'chat_bubble', 'comment', 'message', 'textsms', 'forum', 'question_answer',
+  'mail_outline', 'markunread', 'drafts', 'forward_to_inbox', 'unsubscribe',
+
+  // Social & People
+  'people', 'group', 'supervisor_account', 'person_add', 'person_remove', 'how_to_reg',
+  'face', 'sentiment_satisfied', 'mood', 'mood_bad', 'sentiment_very_satisfied',
+  'thumb_up', 'thumb_down', 'thumbs_up_down', 'favorite_border', 'volunteer_activism',
+
+  // Navigation
+  'arrow_back', 'arrow_forward', 'arrow_upward', 'arrow_downward', 'expand_more',
+  'expand_less', 'chevron_left', 'chevron_right', 'first_page', 'last_page',
+  'navigate_next', 'navigate_before', 'unfold_more', 'unfold_less', 'more_horiz',
+  'more_vert', 'apps', 'menu_open', 'fullscreen', 'fullscreen_exit', 'zoom_in',
+  'zoom_out', 'filter_list', 'sort', 'swap_vert', 'swap_horiz',
+
+  // Media & Entertainment
+  'play_arrow', 'pause', 'stop', 'skip_next', 'skip_previous', 'replay', 'shuffle',
+  'repeat', 'repeat_one', 'fast_forward', 'fast_rewind', 'volume_up', 'volume_down',
+  'volume_off', 'volume_mute', 'mic', 'mic_off', 'headset', 'speaker', 'surround_sound',
+  'music_note', 'audiotrack', 'library_music', 'album', 'queue_music', 'playlist_add',
+  'radio', 'equalizer', 'graphic_eq', 'video_library', 'movie', 'theaters', 'tv',
+
+  // Image & Photography
+  'camera', 'photo_camera', 'camera_alt', 'image', 'photo', 'photo_library', 'collections',
+  'filter', 'palette', 'brush', 'format_paint', 'color_lens', 'gradient', 'wallpaper',
+  'crop', 'rotate_left', 'rotate_right', 'flip', 'brightness_4', 'brightness_5',
+  'exposure', 'wb_sunny', 'wb_cloudy', 'wb_incandescent', 'flash_on', 'flash_off',
+
+  // Location & Travel
+  'location_on', 'place', 'map', 'navigation', 'explore', 'room', 'pin_drop',
+  'my_location', 'near_me', 'directions', 'directions_walk', 'directions_run',
+  'directions_car', 'directions_bike', 'directions_bus', 'directions_subway',
+  'flight', 'flight_takeoff', 'flight_land', 'local_taxi', 'local_shipping',
+  'train', 'tram', 'subway', 'airport_shuttle', 'ev_station', 'local_gas_station',
+  'hotel', 'restaurant', 'local_cafe', 'local_bar', 'local_pizza', 'fastfood',
+  'beach_access', 'pool', 'hot_tub', 'casino', 'golf_course', 'terrain',
+
+  // Shopping & Commerce
+  'shopping_bag', 'shopping_basket', 'store', 'storefront', 'local_mall', 'add_shopping_cart',
+  'remove_shopping_cart', 'loyalty', 'redeem', 'card_giftcard', 'sell', 'point_of_sale',
+  'attach_money', 'monetization_on', 'paid', 'payment', 'credit_card', 'account_balance',
+  'account_balance_wallet', 'savings', 'currency_exchange', 'price_check', 'receipt',
+
+  // Office & Work
+  'business', 'business_center', 'work', 'work_outline', 'badge', 'corporate_fare',
+  'folder', 'folder_open', 'folder_shared', 'create_new_folder', 'drive_file_move',
+  'article', 'description', 'assignment', 'assignment_turned_in', 'task', 'task_alt',
+  'note', 'note_add', 'sticky_note_2', 'book', 'library_books', 'menu_book',
+  'auto_stories', 'import_contacts', 'bookmark_border', 'bookmarks', 'label',
+  'print', 'scanner', 'fax', 'attachment', 'insert_drive_file', 'insert_photo',
+
+  // Education & Learning
+  'school', 'class', 'science', 'biotech', 'psychology', 'calculate', 'functions',
+  'grade', 'emoji_events', 'military_tech', 'workspace_premium', 'verified',
+  'star_rate', 'star_half', 'star_outline', 'new_releases', 'report', 'flag',
+
+  // Technology & Development
+  'code', 'terminal', 'developer_mode', 'data_object', 'integration_instructions',
+  'api', 'web', 'http', 'https', 'dns', 'router', 'settings_ethernet', 'cable',
+  'usb', 'bluetooth', 'wifi', 'signal_wifi_4_bar', 'network_check', 'vpn_lock',
+  'security', 'lock', 'lock_open', 'key', 'vpn_key', 'password', 'fingerprint',
+  'devices', 'computer', 'desktop_windows', 'laptop_mac', 'tablet_mac', 'phone_iphone',
+  'watch', 'keyboard', 'mouse', 'headphones', 'speaker', 'memory', 'storage',
+
+  // Nature & Environment
+  'eco', 'nature', 'nature_people', 'forest', 'park', 'grass', 'local_florist',
+  'yard', 'agriculture', 'spa', 'pets', 'bug_report', 'cruelty_free', 'recycling',
+  'compost', 'energy_savings_leaf', 'water_drop', 'waves', 'ac_unit', 'severe_cold',
+
+  // Weather
+  'wb_sunny', 'wb_cloudy', 'cloud', 'cloud_queue', 'thunderstorm', 'flash_on',
+  'nights_stay', 'brightness_2', 'brightness_3', 'light_mode', 'dark_mode',
+
+  // Health & Medical
+  'health_and_safety', 'medical_services', 'local_hospital', 'healing', 'vaccines',
+  'medication', 'emergency', 'favorite', 'monitor_heart', 'psychology', 'self_improvement',
+  'fitness_center', 'sports', 'sports_basketball', 'sports_soccer', 'sports_tennis',
+  'pool', 'directions_run', 'hiking', 'sledding', 'snowboarding', 'downhill_skiing',
+
+  // Food & Drink
+  'restaurant', 'local_dining', 'dinner_dining', 'brunch_dining', 'lunch_dining',
+  'bakery_dining', 'local_cafe', 'coffee', 'local_bar', 'liquor', 'wine_bar',
+  'local_pizza', 'fastfood', 'ramen_dining', 'rice_bowl', 'soup_kitchen',
+  'cake', 'cookie', 'icecream', 'emoji_food_beverage', 'tapas', 'set_meal',
+
+  // Home & Living
+  'home', 'apartment', 'cottage', 'holiday_village', 'house', 'house_siding',
+  'bed', 'bedroom_parent', 'living', 'kitchen', 'countertops', 'microwave',
+  'oven', 'blender', 'coffee_maker', 'dining', 'chair', 'desk', 'table_bar',
+  'light', 'light_mode', 'lightbulb', 'nightlight', 'power', 'flash_on',
+  'ac_unit', 'air', 'heat', 'door_front', 'door_back', 'garage', 'window',
+
+  // Miscellaneous
+  'accessibility', 'accessible', 'android', 'apple', 'language', 'translate',
+  'public', 'travel_explore', 'tour', 'celebration', 'local_fire_department',
+  'fireplace', 'rocket', 'rocket_launch', 'satellite', 'diamond', 'auto_awesome',
+  'stars', 'whatshot', 'verified_user', 'shield', 'admin_panel_settings',
+  'policy', 'gavel', 'balance', 'account_tree', 'hub', 'category', 'extension',
+  'widgets', 'grid_view', 'view_module', 'view_list', 'view_column', 'view_agenda',
+  'battery_full', 'battery_std', 'brightness_high', 'brightness_low', 'brightness_medium',
+  'nightlight', 'event_seat', 'local_activity', 'confirmation_number', 'live_tv',
+  'podcasts', 'toys', 'child_care', 'stroller', 'baby_changing_station', 'family_restroom'
+];
+
+// State
+let selectedIcon = 'home';
+let iconStyle = 'filled'; // filled, outlined, rounded, sharp, two-tone
+let primaryColor = '#2196F3';
+let secondaryColor = '#FF9800';
+let backgroundColor = '#FFFFFF';
+let iconColor = '#424242';
+
+// Initialize
+function init() {
+  console.log('Favicon Generator Init - Loading', MATERIAL_ICONS.length, 'icons');
+  loadIcons();
+  updatePreview();
+  setupEventListeners();
+  console.log('Init complete');
+}// Load Material Icons
+function loadIcons() {
+  const grid = document.getElementById('iconGrid');
+  if (!grid) {
+    console.error('Icon grid element not found!');
+    return;
+  }
+
+  grid.innerHTML = '';
+  const styleClass = getIconStyleClass();
+
+  MATERIAL_ICONS.forEach(icon => {
+    const item = document.createElement('div');
+    item.className = 'icon-item';
+    if (icon === selectedIcon) {
+      item.classList.add('selected');
+    }
+    item.onclick = () => selectIcon(icon);
+
+    item.innerHTML = `
+      <span class="${styleClass}">${icon}</span>
+      <span class="icon-name">${icon}</span>
+    `;
+
+    grid.appendChild(item);
+  });
+
+  // Update icon count
+  const iconCountEl = document.getElementById('iconCount');
+  if (iconCountEl) {
+    iconCountEl.textContent = `${MATERIAL_ICONS.length} icons available`;
+  }
+
+  console.log(`Loaded ${MATERIAL_ICONS.length} icons with style: ${iconStyle}`);
+}// Get icon style class
+function getIconStyleClass() {
+  switch(iconStyle) {
+    case 'outlined': return 'material-icons-outlined';
+    case 'rounded': return 'material-icons-round';
+    case 'sharp': return 'material-icons-sharp';
+    case 'two-tone': return 'material-icons-two-tone';
+    default: return 'material-icons';
+  }
+}// Search Icons
+function searchIcons() {
+  const query = document.getElementById('iconSearch').value.toLowerCase();
+  const items = document.querySelectorAll('.icon-item');
+
+  items.forEach(item => {
+    const name = item.querySelector('.icon-name').textContent.toLowerCase();
+    item.style.display = name.includes(query) ? 'flex' : 'none';
+  });
+}
+
+// Select Icon
+function selectIcon(icon) {
+  selectedIcon = icon;
+
+  // Update UI
+  document.querySelectorAll('.icon-item').forEach(item => {
+    item.classList.remove('selected');
+  });
+  event.currentTarget.classList.add('selected');
+
+  updatePreview();
+}
+
+// Update Colors
+function updateColor(type) {
+  const picker = document.getElementById(`${type}Picker`);
+  const input = document.getElementById(`${type}Input`);
+
+  if (type === 'primary') primaryColor = picker.value;
+  if (type === 'secondary') secondaryColor = picker.value;
+  if (type === 'background') backgroundColor = picker.value;
+  if (type === 'icon') iconColor = picker.value;
+
+  input.value = picker.value;
+  updatePreview();
+}
+
+function updateColorFromInput(type) {
+  const input = document.getElementById(`${type}Input`);
+  const picker = document.getElementById(`${type}Picker`);
+
+  if (/^#[0-9A-F]{6}$/i.test(input.value)) {
+    if (type === 'primary') primaryColor = input.value;
+    if (type === 'secondary') secondaryColor = input.value;
+    if (type === 'background') backgroundColor = input.value;
+    if (type === 'icon') iconColor = input.value;
+
+    picker.value = input.value;
+    updatePreview();
+  }
+}
+
+// Update Icon Style
+function updateIconStyle() {
+  iconStyle = document.getElementById('iconStyleSelect').value;
+  console.log('Icon style changed to:', iconStyle);
+  loadIcons();
+  updatePreview();
+}
+
+// Draw Icon on Canvas
+function drawFavicon(canvas, size) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = size;
+  canvas.height = size;
+
+  // Clear
+  ctx.clearRect(0, 0, size, size);
+
+  // Background
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, size, size);
+
+  // Load Material Icons font and draw icon
+  const fontFamily = iconStyle === 'filled' ? 'Material Icons' :
+                     iconStyle === 'outlined' ? 'Material Icons Outlined' :
+                     iconStyle === 'rounded' ? 'Material Icons Round' :
+                     iconStyle === 'sharp' ? 'Material Icons Sharp' :
+                     'Material Icons Two Tone';
+
+  ctx.font = `${size * 0.7}px '${fontFamily}'`;
+  ctx.fillStyle = iconColor;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(selectedIcon, size / 2, size / 2);
+
+  // Add optional accent (small circle in corner)
+  if (document.getElementById('addAccent').checked) {
+    ctx.fillStyle = secondaryColor;
+    ctx.beginPath();
+    ctx.arc(size * 0.8, size * 0.2, size * 0.12, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// Update Preview
+function updatePreview() {
+  // Draw all sizes
+  drawFavicon(document.getElementById('preview16'), 16);
+  drawFavicon(document.getElementById('preview32'), 32);
+  drawFavicon(document.getElementById('preview48'), 48);
+  drawFavicon(document.getElementById('preview64'), 64);
+  drawFavicon(document.getElementById('preview128'), 128);
+  drawFavicon(document.getElementById('preview256'), 256);
+}
+
+// Generate ICO file
+async function generateICO() {
+  const sizes = [16, 32, 48, 64, 128, 256];
+  const button = event.target;
+  const originalText = button.textContent;
+
+  button.textContent = 'Generating...';
+  button.disabled = true;
+
+  try {
+    // Create canvases for each size
+    const imageDataArray = sizes.map(size => {
+      const canvas = document.createElement('canvas');
+      drawFavicon(canvas, size);
+      return {
+        size: size,
+        canvas: canvas,
+        data: canvas.getContext('2d').getImageData(0, 0, size, size)
+      };
+    });
+
+    // Generate ICO file
+    const icoBlob = createICOBlob(imageDataArray);
+
+    // Download
+    const url = URL.createObjectURL(icoBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'favicon.ico';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showStatus('✓ favicon.ico generated successfully!', 'success');
+  } catch (error) {
+    showStatus('✗ Error generating favicon: ' + error.message, 'error');
+  } finally {
+    button.textContent = originalText;
+    button.disabled = false;
+  }
+}
+
+// Create ICO Blob
+function createICOBlob(imageDataArray) {
+  // ICO file format header
+  const iconCount = imageDataArray.length;
+
+  // Calculate file size
+  let fileSize = 6 + (iconCount * 16); // Header + directory entries
+  const pngDataArray = [];
+
+  imageDataArray.forEach(({ canvas }) => {
+    const pngData = canvas.toDataURL('image/png');
+    const pngBytes = atob(pngData.split(',')[1]);
+    pngDataArray.push(pngBytes);
+    fileSize += pngBytes.length;
+  });
+
+  // Create buffer
+  const buffer = new ArrayBuffer(fileSize);
+  const view = new DataView(buffer);
+  let offset = 0;
+
+  // Write ICO header
+  view.setUint16(offset, 0, true); offset += 2; // Reserved
+  view.setUint16(offset, 1, true); offset += 2; // Type (1 = ICO)
+  view.setUint16(offset, iconCount, true); offset += 2; // Image count
+
+  // Write directory entries
+  let imageOffset = 6 + (iconCount * 16);
+  imageDataArray.forEach(({ size }, index) => {
+    const pngSize = pngDataArray[index].length;
+
+    view.setUint8(offset, size === 256 ? 0 : size); offset += 1; // Width
+    view.setUint8(offset, size === 256 ? 0 : size); offset += 1; // Height
+    view.setUint8(offset, 0); offset += 1; // Color palette
+    view.setUint8(offset, 0); offset += 1; // Reserved
+    view.setUint16(offset, 1, true); offset += 2; // Color planes
+    view.setUint16(offset, 32, true); offset += 2; // Bits per pixel
+    view.setUint32(offset, pngSize, true); offset += 4; // Image size
+    view.setUint32(offset, imageOffset, true); offset += 4; // Image offset
+
+    imageOffset += pngSize;
+  });
+
+  // Write PNG data
+  pngDataArray.forEach(pngBytes => {
+    for (let i = 0; i < pngBytes.length; i++) {
+      view.setUint8(offset++, pngBytes.charCodeAt(i));
+    }
+  });
+
+  return new Blob([buffer], { type: 'image/x-icon' });
+}
+
+// Download PNG
+function downloadPNG(size) {
+  const canvas = document.createElement('canvas');
+  drawFavicon(canvas, size);
+
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `favicon-${size}x${size}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+
+  showStatus(`✓ ${size}×${size} PNG downloaded!`, 'success');
+}
+
+// Show Status Message
+function showStatus(message, type) {
+  const statusDiv = document.getElementById('statusMessage');
+  statusDiv.textContent = message;
+  statusDiv.className = `status-message ${type}`;
+  statusDiv.style.display = 'block';
+
+  setTimeout(() => {
+    statusDiv.style.display = 'none';
+  }, 3000);
+}
+
+// Reset to Defaults
+function resetDefaults() {
+  selectedIcon = 'home';
+  iconStyle = 'filled';
+  primaryColor = '#2196F3';
+  secondaryColor = '#FF9800';
+  backgroundColor = '#FFFFFF';
+  iconColor = '#424242';
+
+  document.getElementById('iconStyleSelect').value = iconStyle;
+  document.getElementById('primaryPicker').value = primaryColor;
+  document.getElementById('primaryInput').value = primaryColor;
+  document.getElementById('secondaryPicker').value = secondaryColor;
+  document.getElementById('secondaryInput').value = secondaryColor;
+  document.getElementById('backgroundPicker').value = backgroundColor;
+  document.getElementById('backgroundInput').value = backgroundColor;
+  document.getElementById('iconPicker').value = iconColor;
+  document.getElementById('iconInput').value = iconColor;
+  document.getElementById('addAccent').checked = false;
+
+  loadIcons();
+  updatePreview();
+}
+
+// Setup Event Listeners
+function setupEventListeners() {
+  document.getElementById('iconSearch').addEventListener('input', searchIcons);
+  document.getElementById('iconStyleSelect').addEventListener('change', updateIconStyle);
+
+  ['primary', 'secondary', 'background', 'icon'].forEach(type => {
+    document.getElementById(`${type}Picker`).addEventListener('input', () => updateColor(type));
+    document.getElementById(`${type}Input`).addEventListener('change', () => updateColorFromInput(type));
+  });
+
+  document.getElementById('addAccent').addEventListener('change', updatePreview);
+}// Initialize on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
