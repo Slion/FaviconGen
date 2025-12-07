@@ -73,9 +73,27 @@
 
     <div style="margin: 15px 0;">
       <label>
+        <input type="checkbox" id="transparentBg">
+        Transparent background
+      </label>
+    </div>
+
+    <div style="margin: 15px 0;">
+      <label>
         <input type="checkbox" id="addAccent">
         Add accent dot in corner
       </label>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <label style="font-weight: 500; display: block; margin-bottom: 8px;">
+        Icon Size: <span id="iconSizeValue">70%</span>
+      </label>
+      <input type="range" id="iconSizeSlider" min="10" max="100" value="70"
+             style="width: 100%; max-width: 300px;">
+      <small style="display: block; color: #757575; margin-top: 5px;">
+        Adjust how large the icon appears on the canvas
+      </small>
     </div>
 
     <div class="button-group">

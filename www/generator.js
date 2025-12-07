@@ -127,6 +127,7 @@ let primaryColor = '#2196F3';
 let secondaryColor = '#FF9800';
 let backgroundColor = '#FFFFFF';
 let iconColor = '#424242';
+let iconSize = 0.7; // Scale factor for icon size (0.1 to 1.0)
 
 // Initialize
 function init() {
@@ -245,12 +246,14 @@ function drawFavicon(canvas, size) {
   canvas.width = size;
   canvas.height = size;
 
-  // Clear
+  // Clear with transparency
   ctx.clearRect(0, 0, size, size);
 
-  // Background
-  ctx.fillStyle = backgroundColor;
-  ctx.fillRect(0, 0, size, size);
+  // Background (only if not transparent)
+  if (backgroundColor !== 'transparent') {
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, size, size);
+  }
 
   // Load Material Icons font and draw icon
   const fontFamily = iconStyle === 'filled' ? 'Material Icons' :
@@ -259,7 +262,7 @@ function drawFavicon(canvas, size) {
                      iconStyle === 'sharp' ? 'Material Icons Sharp' :
                      'Material Icons Two Tone';
 
-  ctx.font = `${size * 0.7}px '${fontFamily}'`;
+  ctx.font = `${size * iconSize}px '${fontFamily}'`;
   ctx.fillStyle = iconColor;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -416,6 +419,7 @@ function resetDefaults() {
   secondaryColor = '#FF9800';
   backgroundColor = '#FFFFFF';
   iconColor = '#424242';
+  iconSize = 0.7;
 
   document.getElementById('iconStyleSelect').value = iconStyle;
   document.getElementById('primaryPicker').value = primaryColor;
@@ -427,8 +431,34 @@ function resetDefaults() {
   document.getElementById('iconPicker').value = iconColor;
   document.getElementById('iconInput').value = iconColor;
   document.getElementById('addAccent').checked = false;
+  document.getElementById('transparentBg').checked = false;
+  document.getElementById('iconSizeSlider').value = iconSize * 100;
+  document.getElementById('iconSizeValue').textContent = Math.round(iconSize * 100) + '%';
 
   loadIcons();
+  updatePreview();
+}
+
+// Update Icon Size
+function updateIconSize() {
+  const slider = document.getElementById('iconSizeSlider');
+  iconSize = slider.value / 100;
+  document.getElementById('iconSizeValue').textContent = slider.value + '%';
+  updatePreview();
+}
+
+// Toggle Transparent Background
+function toggleTransparent() {
+  const checkbox = document.getElementById('transparentBg');
+  const bgControls = document.querySelectorAll('#backgroundPicker, #backgroundInput');
+
+  if (checkbox.checked) {
+    backgroundColor = 'transparent';
+    bgControls.forEach(el => el.disabled = true);
+  } else {
+    backgroundColor = document.getElementById('backgroundPicker').value;
+    bgControls.forEach(el => el.disabled = false);
+  }
   updatePreview();
 }
 
@@ -443,6 +473,8 @@ function setupEventListeners() {
   });
 
   document.getElementById('addAccent').addEventListener('change', updatePreview);
+  document.getElementById('transparentBg').addEventListener('change', toggleTransparent);
+  document.getElementById('iconSizeSlider').addEventListener('input', updateIconSize);
 }// Initialize on load
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
