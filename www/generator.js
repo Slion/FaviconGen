@@ -128,6 +128,8 @@ let secondaryColor = '#FF9800';
 let backgroundColor = '#FFFFFF';
 let iconColor = '#424242';
 let iconSize = 0.7; // Scale factor for icon size (0.1 to 1.0)
+let darkModeIconColor = '#FFFFFF';
+let darkModeBackgroundColor = '#1a1a1a';
 
 // Initialize
 function init() {
@@ -316,7 +318,7 @@ async function generateICO() {
     const url = URL.createObjectURL(icoBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'favicon.ico';
+    a.download = `${selectedIcon}.ico`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -391,7 +393,7 @@ function downloadPNG(size) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `favicon-${size}x${size}.png`;
+    a.download = `${selectedIcon}-${size}x${size}.png`;
     a.click();
     URL.revokeObjectURL(url);
   }, 'image/png');
@@ -399,7 +401,157 @@ function downloadPNG(size) {
   showStatus(`✓ ${size}×${size} PNG downloaded!`, 'success');
 }
 
-// Show Status Message
+// Generate SVG with theme support
+async function generateSVG() {
+  const button = event.target;
+  const originalText = button.textContent;
+  button.textContent = 'Generating SVG...';
+  button.disabled = true;
+
+  try {
+    // Fetch actual SVG from Material Design Icons
+    // Try multiple CDN sources
+    const urls = [
+      // Pictogrammers Material Design Icons CDN (community maintained, very reliable)
+      `https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/${selectedIcon.replace(/_/g, '-')}.svg`,
+      // Google Material Symbols (newer API)
+      `https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/${selectedIcon}/default/48px.svg`,
+      // Alternative CDN
+      `https://unpkg.com/@mdi/svg@latest/svg/${selectedIcon.replace(/_/g, '-')}.svg`,
+    ];
+    
+    let svgContent = null;
+    let sourceUrl = '';
+    
+    for (const url of urls) {
+      try {
+        console.log('Trying to fetch icon from:', url);
+        const response = await fetch(url);
+        if (response.ok) {
+          const text = await response.text();
+          console.log('Fetched SVG snippet:', text.substring(0, 200));
+          if (text.includes('<svg') && text.includes('<path')) {
+            svgContent = text;
+            sourceUrl = url;
+            console.log('Successfully fetched from:', url);
+            break;
+          }
+        }
+      } catch (error) {
+        console.log('Failed to fetch from', url, ':', error.message);
+      }
+    }
+    
+    if (!svgContent) {
+      showStatus(`✗ Could not fetch SVG for "${selectedIcon}". This icon may not be available as vector graphics.`, 'error');
+      return;
+    }
+    
+    // Parse the SVG to extract viewBox and paths
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
+    const svgElement = svgDoc.querySelector('svg');
+    
+    if (!svgElement) {
+      showStatus('✗ Invalid SVG format received', 'error');
+      return;
+    }
+    
+    const viewBox = svgElement.getAttribute('viewBox') || '0 0 24 24';
+    const paths = Array.from(svgElement.querySelectorAll('path, circle, rect, polygon')).map(el => el.outerHTML).join('\n    ');
+    
+    if (!paths) {
+      showStatus('✗ No paths found in SVG', 'error');
+      return;
+    }
+    
+    console.log('ViewBox:', viewBox);
+    console.log('Paths found:', paths.substring(0, 200));
+    
+    // Parse viewBox to get dimensions
+    const [vbX, vbY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+    const size = 32;
+    
+    // Calculate scaling and positioning based on iconSize
+    const scale = iconSize;
+    const scaledSize = vbWidth * scale;
+    const offsetX = (size - scaledSize) / 2;
+    const offsetY = (size - scaledSize) / 2;
+    
+    // Build the new SVG
+    let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+    
+    // Add styles
+    svg += `
+  <defs>
+    <style>
+      .icon-path { fill: ${iconColor}; }`;
+    
+    if (backgroundColor !== 'transparent') {
+      svg += `
+      .background { fill: ${backgroundColor}; }`;
+    }
+    
+    // Add dark mode support
+    if (document.getElementById('enableDarkMode').checked) {
+      svg += `
+      @media (prefers-color-scheme: dark) {
+        .icon-path { fill: ${darkModeIconColor}; }`;
+      
+      if (darkModeBackgroundColor !== 'transparent') {
+        svg += `
+        .background { fill: ${darkModeBackgroundColor}; }`;
+      }
+      
+      svg += `
+      }`;
+    }
+    
+    svg += `
+    </style>
+  </defs>`;
+    
+    // Add background if not transparent
+    if (backgroundColor !== 'transparent') {
+      svg += `
+  <rect class="background" width="${size}" height="${size}"/>`;
+    }
+    
+    // Add the icon paths with scaling
+    svg += `
+  <g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">
+    ${paths.replace(/fill="[^"]*"/g, '').replace(/<(path|circle|rect|polygon)/g, '<$1 class="icon-path"')}
+  </g>`;
+    
+    // Add accent dot if enabled
+    if (document.getElementById('addAccent').checked) {
+      svg += `
+  <circle cx="${size * 0.8}" cy="${size * 0.2}" r="${size * 0.12}" fill="${secondaryColor}"/>`;
+    }
+    
+    svg += `
+</svg>`;
+    
+    console.log('Final SVG length:', svg.length);
+    
+    // Download
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedIcon}.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showStatus('✓ Vector SVG favicon generated with theme support!', 'success');
+  } catch (error) {
+    console.error('Error generating SVG:', error);
+    showStatus('✗ Error generating SVG: ' + error.message, 'error');
+  } finally {
+    button.textContent = originalText;
+    button.disabled = false;
+  }
+}// Show Status Message
 function showStatus(message, type) {
   const statusDiv = document.getElementById('statusMessage');
   statusDiv.textContent = message;
@@ -420,6 +572,8 @@ function resetDefaults() {
   backgroundColor = '#FFFFFF';
   iconColor = '#424242';
   iconSize = 0.7;
+  darkModeIconColor = '#FFFFFF';
+  darkModeBackgroundColor = '#1a1a1a';
 
   document.getElementById('iconStyleSelect').value = iconStyle;
   document.getElementById('primaryPicker').value = primaryColor;
@@ -430,10 +584,16 @@ function resetDefaults() {
   document.getElementById('backgroundInput').value = backgroundColor;
   document.getElementById('iconPicker').value = iconColor;
   document.getElementById('iconInput').value = iconColor;
+  document.getElementById('darkModeIconPicker').value = darkModeIconColor;
+  document.getElementById('darkModeIconInput').value = darkModeIconColor;
+  document.getElementById('darkModeBgPicker').value = darkModeBackgroundColor;
+  document.getElementById('darkModeBgInput').value = darkModeBackgroundColor;
   document.getElementById('addAccent').checked = false;
   document.getElementById('transparentBg').checked = false;
+  document.getElementById('enableDarkMode').checked = false;
   document.getElementById('iconSizeSlider').value = iconSize * 100;
   document.getElementById('iconSizeValue').textContent = Math.round(iconSize * 100) + '%';
+  toggleDarkModeControls();
 
   loadIcons();
   updatePreview();
@@ -462,6 +622,41 @@ function toggleTransparent() {
   updatePreview();
 }
 
+// Update Dark Mode Colors
+function updateDarkModeColor(type) {
+  const picker = document.getElementById(`darkMode${type}Picker`);
+  const input = document.getElementById(`darkMode${type}Input`);
+
+  if (type === 'Icon') darkModeIconColor = picker.value;
+  if (type === 'Bg') darkModeBackgroundColor = picker.value;
+
+  input.value = picker.value;
+}
+
+function updateDarkModeColorFromInput(type) {
+  const input = document.getElementById(`darkMode${type}Input`);
+  const picker = document.getElementById(`darkMode${type}Picker`);
+
+  if (/^#[0-9A-F]{6}$/i.test(input.value)) {
+    if (type === 'Icon') darkModeIconColor = input.value;
+    if (type === 'Bg') darkModeBackgroundColor = input.value;
+
+    picker.value = input.value;
+  }
+}
+
+// Toggle Dark Mode Controls
+function toggleDarkModeControls() {
+  const checkbox = document.getElementById('enableDarkMode');
+  const darkModeSection = document.getElementById('darkModeControls');
+
+  if (checkbox.checked) {
+    darkModeSection.style.display = 'block';
+  } else {
+    darkModeSection.style.display = 'none';
+  }
+}
+
 // Setup Event Listeners
 function setupEventListeners() {
   document.getElementById('iconSearch').addEventListener('input', searchIcons);
@@ -472,8 +667,14 @@ function setupEventListeners() {
     document.getElementById(`${type}Input`).addEventListener('change', () => updateColorFromInput(type));
   });
 
+  ['Icon', 'Bg'].forEach(type => {
+    document.getElementById(`darkMode${type}Picker`).addEventListener('input', () => updateDarkModeColor(type));
+    document.getElementById(`darkMode${type}Input`).addEventListener('change', () => updateDarkModeColorFromInput(type));
+  });
+
   document.getElementById('addAccent').addEventListener('change', updatePreview);
   document.getElementById('transparentBg').addEventListener('change', toggleTransparent);
+  document.getElementById('enableDarkMode').addEventListener('change', toggleDarkModeControls);
   document.getElementById('iconSizeSlider').addEventListener('input', updateIconSize);
 }// Initialize on load
 if (document.readyState === 'loading') {

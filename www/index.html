@@ -80,6 +80,32 @@
 
     <div style="margin: 15px 0;">
       <label>
+        <input type="checkbox" id="enableDarkMode">
+        Enable dark mode support (for SVG)
+      </label>
+    </div>
+
+    <div id="darkModeControls" style="display: none; margin: 15px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+      <h4 style="margin-top: 0; color: #666;">Dark Mode Colors</h4>
+      <div class="color-controls">
+        <div class="color-option">
+          <label>Dark Icon Color:</label>
+          <input type="color" id="darkModeIconPicker" value="#FFFFFF">
+          <input type="text" id="darkModeIconInput" value="#FFFFFF" maxlength="7">
+        </div>
+        <div class="color-option">
+          <label>Dark Background:</label>
+          <input type="color" id="darkModeBgPicker" value="#1a1a1a">
+          <input type="text" id="darkModeBgInput" value="#1a1a1a" maxlength="7">
+        </div>
+      </div>
+      <small style="color: #757575; display: block; margin-top: 10px;">
+        These colors are used when the user's system is in dark mode (SVG only)
+      </small>
+    </div>
+
+    <div style="margin: 15px 0;">
+      <label>
         <input type="checkbox" id="addAccent">
         Add accent dot in corner
       </label>
@@ -150,12 +176,16 @@
 
     <div class="button-group">
       <button onclick="generateICO()" class="success">
-        📥 Generate & Download favicon.ico
+        Download as ICO
+      </button>
+      <button onclick="generateSVG()" class="success" style="background: #9C27B0;">
+        Download as SVG
       </button>
     </div>
 
     <p style="text-align: center; color: #757575; margin: 20px 0;">
-      The .ico file includes all sizes (16, 32, 48, 64, 128, 256px)
+      <strong>ICO:</strong> All sizes (16-256px), works everywhere<br>
+      <strong>SVG:</strong> Scalable, theme-aware (modern browsers)
     </p>
 
     <details>
@@ -178,16 +208,25 @@
     <ol>
       <li>Choose a Material Design icon from the grid above</li>
       <li>Customize colors to match your brand</li>
+      <li>Enable dark mode support if you want theme-aware favicons (SVG)</li>
       <li>Preview at different sizes</li>
-      <li>Click "Generate & Download favicon.ico"</li>
-      <li>Upload <code>favicon.ico</code> to your website's root directory</li>
-      <li>Add to your HTML <code>&lt;head&gt;</code> (optional):
-        <pre style="background: white; padding: 10px; margin: 10px 0; border-radius: 4px; overflow-x: auto;">&lt;link rel="icon" type="image/x-icon" href="/favicon.ico"&gt;</pre>
+      <li>Download your preferred format:
+        <ul style="margin: 8px 0;">
+          <li><strong>favicon.ico</strong> - Traditional format, works everywhere</li>
+          <li><strong>favicon.svg</strong> - Modern format with dark mode support</li>
+        </ul>
+      </li>
+      <li>Upload the file(s) to your website's root directory</li>
+      <li>Add to your HTML <code>&lt;head&gt;</code>:
+        <pre style="background: white; padding: 10px; margin: 10px 0; border-radius: 4px; overflow-x: auto;">&lt;!-- Modern browsers with dark mode support --&gt;
+&lt;link rel="icon" href="/favicon.svg" type="image/svg+xml"&gt;
+&lt;!-- Fallback for older browsers --&gt;
+&lt;link rel="icon" href="/favicon.ico" type="image/x-icon"&gt;</pre>
       </li>
       <li>Clear browser cache and reload to see your new favicon!</li>
     </ol>
 
-    <p><strong>Note:</strong> The generated .ico file contains multiple sizes optimized for different contexts (browser tabs, bookmarks, shortcuts, etc.)</p>
+    <p><strong>💡 Tip:</strong> Use both formats! SVG for modern browsers with theme support, ICO as fallback for older browsers.</p>
   </div>
 
   <script src="generator.js"></script>
