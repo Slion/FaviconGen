@@ -419,10 +419,10 @@ async function generateSVG() {
       // Alternative CDN
       `https://unpkg.com/@mdi/svg@latest/svg/${selectedIcon.replace(/_/g, '-')}.svg`,
     ];
-    
+
     let svgContent = null;
     let sourceUrl = '';
-    
+
     for (const url of urls) {
       try {
         console.log('Trying to fetch icon from:', url);
@@ -441,99 +441,99 @@ async function generateSVG() {
         console.log('Failed to fetch from', url, ':', error.message);
       }
     }
-    
+
     if (!svgContent) {
       showStatus(`✗ Could not fetch SVG for "${selectedIcon}". This icon may not be available as vector graphics.`, 'error');
       return;
     }
-    
+
     // Parse the SVG to extract viewBox and paths
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
     const svgElement = svgDoc.querySelector('svg');
-    
+
     if (!svgElement) {
       showStatus('✗ Invalid SVG format received', 'error');
       return;
     }
-    
+
     const viewBox = svgElement.getAttribute('viewBox') || '0 0 24 24';
     const paths = Array.from(svgElement.querySelectorAll('path, circle, rect, polygon')).map(el => el.outerHTML).join('\n    ');
-    
+
     if (!paths) {
       showStatus('✗ No paths found in SVG', 'error');
       return;
     }
-    
+
     console.log('ViewBox:', viewBox);
     console.log('Paths found:', paths.substring(0, 200));
-    
+
     // Parse viewBox to get dimensions
     const [vbX, vbY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
     const size = 32;
-    
+
     // Calculate scaling and positioning based on iconSize
     const scale = iconSize;
     const scaledSize = vbWidth * scale;
     const offsetX = (size - scaledSize) / 2;
     const offsetY = (size - scaledSize) / 2;
-    
+
     // Build the new SVG
     let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
-    
+
     // Add styles
     svg += `
   <defs>
     <style>
       .icon-path { fill: ${iconColor}; }`;
-    
+
     if (backgroundColor !== 'transparent') {
       svg += `
       .background { fill: ${backgroundColor}; }`;
     }
-    
+
     // Add dark mode support
     if (document.getElementById('enableDarkMode').checked) {
       svg += `
       @media (prefers-color-scheme: dark) {
         .icon-path { fill: ${darkModeIconColor}; }`;
-      
+
       if (darkModeBackgroundColor !== 'transparent') {
         svg += `
         .background { fill: ${darkModeBackgroundColor}; }`;
       }
-      
+
       svg += `
       }`;
     }
-    
+
     svg += `
     </style>
   </defs>`;
-    
+
     // Add background if not transparent
     if (backgroundColor !== 'transparent') {
       svg += `
   <rect class="background" width="${size}" height="${size}"/>`;
     }
-    
+
     // Add the icon paths with scaling
     svg += `
   <g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">
     ${paths.replace(/fill="[^"]*"/g, '').replace(/<(path|circle|rect|polygon)/g, '<$1 class="icon-path"')}
   </g>`;
-    
+
     // Add accent dot if enabled
     if (document.getElementById('addAccent').checked) {
       svg += `
   <circle cx="${size * 0.8}" cy="${size * 0.2}" r="${size * 0.12}" fill="${secondaryColor}"/>`;
     }
-    
+
     svg += `
 </svg>`;
-    
+
     console.log('Final SVG length:', svg.length);
-    
+
     // Download
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -551,7 +551,70 @@ async function generateSVG() {
     button.textContent = originalText;
     button.disabled = false;
   }
-}// Show Status Message
+}
+
+// Download raw SVG (unmodified from source)
+async function downloadRawSVG() {
+  const button = event.target;
+  const originalText = button.textContent;
+  button.textContent = 'Fetching...';
+  button.disabled = true;
+
+  try {
+    // Fetch actual SVG from Material Design Icons
+    const urls = [
+      // Pictogrammers Material Design Icons CDN
+      `https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/${selectedIcon.replace(/_/g, '-')}.svg`,
+      // Google Material Symbols
+      `https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/${selectedIcon}/default/48px.svg`,
+      // Alternative CDN
+      `https://unpkg.com/@mdi/svg@latest/svg/${selectedIcon.replace(/_/g, '-')}.svg`,
+    ];
+
+    let svgContent = null;
+
+    for (const url of urls) {
+      try {
+        console.log('Trying to fetch raw icon from:', url);
+        const response = await fetch(url);
+        if (response.ok) {
+          const text = await response.text();
+          if (text.includes('<svg') && (text.includes('<path') || text.includes('<circle'))) {
+            svgContent = text;
+            console.log('Successfully fetched raw SVG from:', url);
+            break;
+          }
+        }
+      } catch (error) {
+        console.log('Failed to fetch from', url, ':', error.message);
+      }
+    }
+
+    if (!svgContent) {
+      showStatus(`✗ Could not fetch raw SVG for "${selectedIcon}".`, 'error');
+      return;
+    }
+
+    // Download the raw SVG as-is
+    const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `icon-${selectedIcon}-raw.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showStatus('✓ Raw SVG downloaded!', 'success');
+  } catch (error) {
+    console.error('Error downloading raw SVG:', error);
+    showStatus('✗ Error: ' + error.message, 'error');
+  } finally {
+    button.textContent = originalText;
+    button.disabled = false;
+  }
+}
+
+// Show Status Message
 function showStatus(message, type) {
   const statusDiv = document.getElementById('statusMessage');
   statusDiv.textContent = message;
