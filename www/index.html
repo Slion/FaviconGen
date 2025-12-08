@@ -24,8 +24,8 @@
     <div style="margin-bottom: 20px;">
       <label for="iconStyleSelect" style="font-weight: 500; margin-right: 10px;">Icon Style:</label>
       <select id="iconStyleSelect" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; cursor: pointer;">
-        <option value="filled">Filled (default)</option>
-        <option value="outlined">Outlined</option>
+        <option value="filled">Filled</option>
+        <option value="outlined" selected>Outlined (default)</option>
         <option value="rounded">Rounded</option>
         <option value="sharp">Sharp</option>
         <option value="two-tone">Two Tone</option>
@@ -73,34 +73,18 @@
 
     <div style="margin: 15px 0;">
       <label>
-        <input type="checkbox" id="transparentBg">
+        <input type="checkbox" id="transparentBg" checked>
         Transparent background
       </label>
     </div>
 
     <div style="margin: 15px 0;">
       <label>
-        <input type="checkbox" id="enableDarkMode">
+        <input type="checkbox" id="enableDarkMode" checked>
         Enable dark mode support (for SVG)
       </label>
-    </div>
-
-    <div id="darkModeControls" style="display: none; margin: 15px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-      <h4 style="margin-top: 0; color: #666;">Dark Mode Colors</h4>
-      <div class="color-controls">
-        <div class="color-option">
-          <label>Dark Icon Color:</label>
-          <input type="color" id="darkModeIconPicker" value="#FFFFFF">
-          <input type="text" id="darkModeIconInput" value="#FFFFFF" maxlength="7">
-        </div>
-        <div class="color-option">
-          <label>Dark Background:</label>
-          <input type="color" id="darkModeBgPicker" value="#1a1a1a">
-          <input type="text" id="darkModeBgInput" value="#1a1a1a" maxlength="7">
-        </div>
-      </div>
-      <small style="color: #757575; display: block; margin-top: 10px;">
-        These colors are used when the user's system is in dark mode (SVG only)
+      <small style="display: block; color: #757575; margin-top: 5px; margin-left: 25px;">
+        Dark mode will use white icon on dark background
       </small>
     </div>
 
@@ -113,16 +97,14 @@
 
     <div style="margin: 20px 0;">
       <label style="font-weight: 500; display: block; margin-bottom: 8px;">
-        Icon Size: <span id="iconSizeValue">70%</span>
+        Icon Size: <span id="iconSizeValue">100%</span>
       </label>
-      <input type="range" id="iconSizeSlider" min="10" max="100" value="70"
+      <input type="range" id="iconSizeSlider" min="10" max="100" value="100" 
              style="width: 100%; max-width: 300px;">
       <small style="display: block; color: #757575; margin-top: 5px;">
         Adjust how large the icon appears on the canvas
       </small>
-    </div>
-
-    <div class="button-group">
+    </div>    <div class="button-group">
       <button onclick="resetDefaults()">Reset to Defaults</button>
     </div>
   </div>

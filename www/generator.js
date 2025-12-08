@@ -122,14 +122,12 @@ const MATERIAL_ICONS = [
 
 // State
 let selectedIcon = 'home';
-let iconStyle = 'filled'; // filled, outlined, rounded, sharp, two-tone
+let iconStyle = 'outlined'; // filled, outlined, rounded, sharp, two-tone
 let primaryColor = '#2196F3';
 let secondaryColor = '#FF9800';
-let backgroundColor = '#FFFFFF';
+let backgroundColor = 'transparent';
 let iconColor = '#424242';
-let iconSize = 0.7; // Scale factor for icon size (0.1 to 1.0)
-let darkModeIconColor = '#FFFFFF';
-let darkModeBackgroundColor = '#1a1a1a';
+let iconSize = 1.0; // Scale factor for icon size (0.1 to 1.0)
 
 // Initialize
 function init() {
@@ -239,6 +237,7 @@ function updateIconStyle() {
   iconStyle = document.getElementById('iconStyleSelect').value;
   console.log('Icon style changed to:', iconStyle);
   loadIcons();
+  searchIcons(); // Re-apply current search filter
   updatePreview();
 }
 
@@ -472,37 +471,45 @@ async function generateSVG() {
     const [vbX, vbY, vbWidth, vbHeight] = viewBox.split(' ').map(Number);
     const size = 32;
 
-    // Calculate scaling and positioning based on iconSize
-    const scale = iconSize;
-    const scaledSize = vbWidth * scale;
-    const offsetX = (size - scaledSize) / 2;
-    const offsetY = (size - scaledSize) / 2;
+    // Calculate scaling based on iconSize
+    // Scale the viewBox dimensions, not the paths themselves
+    const scaledViewBoxWidth = vbWidth * iconSize;
+    const scaledViewBoxHeight = vbHeight * iconSize;
+    
+    // Center the scaled viewBox
+    const viewBoxX = vbX - (scaledViewBoxWidth - vbWidth) / 2;
+    const viewBoxY = vbY - (scaledViewBoxHeight - vbHeight) / 2;
+    
+    console.log('ViewBox calculation:', { original: viewBox, scaled: `${viewBoxX} ${viewBoxY} ${scaledViewBoxWidth} ${scaledViewBoxHeight}` });
 
-    // Build the new SVG
-    let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+    // Build the new SVG - keep original viewBox coordinate system
+    let svg = `<svg width="${size}" height="${size}" viewBox="${viewBoxX} ${viewBoxY} ${scaledViewBoxWidth} ${scaledViewBoxHeight}" xmlns="http://www.w3.org/2000/svg">`;
 
     // Add styles
     svg += `
   <defs>
     <style>
       .icon-path { fill: ${iconColor}; }`;
-
+      
     if (backgroundColor !== 'transparent') {
       svg += `
       .background { fill: ${backgroundColor}; }`;
     }
 
-    // Add dark mode support
+    // Add dark mode support - invert colors
     if (document.getElementById('enableDarkMode').checked) {
+      const darkBg = backgroundColor !== 'transparent' ? '#1a1a1a' : 'none';
+      const darkIcon = '#FFFFFF';
+      
       svg += `
       @media (prefers-color-scheme: dark) {
-        .icon-path { fill: ${darkModeIconColor}; }`;
-
-      if (darkModeBackgroundColor !== 'transparent') {
+        .icon-path { fill: ${darkIcon}; }`;
+        
+      if (backgroundColor !== 'transparent') {
         svg += `
-        .background { fill: ${darkModeBackgroundColor}; }`;
+        .background { fill: ${darkBg}; }`;
       }
-
+      
       svg += `
       }`;
     }
@@ -511,22 +518,29 @@ async function generateSVG() {
     </style>
   </defs>`;
 
-    // Add background if not transparent
+    // Add background rectangle only if not transparent
     if (backgroundColor !== 'transparent') {
       svg += `
-  <rect class="background" width="${size}" height="${size}"/>`;
+  <rect class="background" x="${viewBoxX}" y="${viewBoxY}" width="${scaledViewBoxWidth}" height="${scaledViewBoxHeight}"/>`;
     }
 
-    // Add the icon paths with scaling
+    // Add the icon paths without any transform
+    // Remove inline fill attributes and add our class for styling
+    const styledPaths = paths
+      .replace(/\sfill="[^"]*"/g, '')
+      .replace(/\sfill='[^']*'/g, '')
+      .replace(/<(path|circle|rect|polygon|ellipse|line|polyline)([^>]*?)>/g, '<$1 class="icon-path"$2>');
+
     svg += `
-  <g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">
-    ${paths.replace(/fill="[^"]*"/g, '').replace(/<(path|circle|rect|polygon)/g, '<$1 class="icon-path"')}
-  </g>`;
+  ${styledPaths}`;
 
     // Add accent dot if enabled
     if (document.getElementById('addAccent').checked) {
+      const accentX = viewBoxX + scaledViewBoxWidth * 0.8;
+      const accentY = viewBoxY + scaledViewBoxHeight * 0.2;
+      const accentR = scaledViewBoxWidth * 0.12;
       svg += `
-  <circle cx="${size * 0.8}" cy="${size * 0.2}" r="${size * 0.12}" fill="${secondaryColor}"/>`;
+  <circle cx="${accentX}" cy="${accentY}" r="${accentR}" fill="${secondaryColor}"/>`;
     }
 
     svg += `
@@ -629,31 +643,25 @@ function showStatus(message, type) {
 // Reset to Defaults
 function resetDefaults() {
   selectedIcon = 'home';
-  iconStyle = 'filled';
+  iconStyle = 'outlined';
   primaryColor = '#2196F3';
   secondaryColor = '#FF9800';
-  backgroundColor = '#FFFFFF';
+  backgroundColor = 'transparent';
   iconColor = '#424242';
-  iconSize = 0.7;
-  darkModeIconColor = '#FFFFFF';
-  darkModeBackgroundColor = '#1a1a1a';
+  iconSize = 1.0;
 
   document.getElementById('iconStyleSelect').value = iconStyle;
   document.getElementById('primaryPicker').value = primaryColor;
   document.getElementById('primaryInput').value = primaryColor;
   document.getElementById('secondaryPicker').value = secondaryColor;
   document.getElementById('secondaryInput').value = secondaryColor;
-  document.getElementById('backgroundPicker').value = backgroundColor;
-  document.getElementById('backgroundInput').value = backgroundColor;
+  document.getElementById('backgroundPicker').value = '#FFFFFF';
+  document.getElementById('backgroundInput').value = '#FFFFFF';
   document.getElementById('iconPicker').value = iconColor;
   document.getElementById('iconInput').value = iconColor;
-  document.getElementById('darkModeIconPicker').value = darkModeIconColor;
-  document.getElementById('darkModeIconInput').value = darkModeIconColor;
-  document.getElementById('darkModeBgPicker').value = darkModeBackgroundColor;
-  document.getElementById('darkModeBgInput').value = darkModeBackgroundColor;
   document.getElementById('addAccent').checked = false;
-  document.getElementById('transparentBg').checked = false;
-  document.getElementById('enableDarkMode').checked = false;
+  document.getElementById('transparentBg').checked = true;
+  document.getElementById('enableDarkMode').checked = true;
   document.getElementById('iconSizeSlider').value = iconSize * 100;
   document.getElementById('iconSizeValue').textContent = Math.round(iconSize * 100) + '%';
   toggleDarkModeControls();
@@ -685,39 +693,9 @@ function toggleTransparent() {
   updatePreview();
 }
 
-// Update Dark Mode Colors
-function updateDarkModeColor(type) {
-  const picker = document.getElementById(`darkMode${type}Picker`);
-  const input = document.getElementById(`darkMode${type}Input`);
-
-  if (type === 'Icon') darkModeIconColor = picker.value;
-  if (type === 'Bg') darkModeBackgroundColor = picker.value;
-
-  input.value = picker.value;
-}
-
-function updateDarkModeColorFromInput(type) {
-  const input = document.getElementById(`darkMode${type}Input`);
-  const picker = document.getElementById(`darkMode${type}Picker`);
-
-  if (/^#[0-9A-F]{6}$/i.test(input.value)) {
-    if (type === 'Icon') darkModeIconColor = input.value;
-    if (type === 'Bg') darkModeBackgroundColor = input.value;
-
-    picker.value = input.value;
-  }
-}
-
 // Toggle Dark Mode Controls
 function toggleDarkModeControls() {
-  const checkbox = document.getElementById('enableDarkMode');
-  const darkModeSection = document.getElementById('darkModeControls');
-
-  if (checkbox.checked) {
-    darkModeSection.style.display = 'block';
-  } else {
-    darkModeSection.style.display = 'none';
-  }
+  // No additional controls needed anymore
 }
 
 // Setup Event Listeners
@@ -728,11 +706,6 @@ function setupEventListeners() {
   ['primary', 'secondary', 'background', 'icon'].forEach(type => {
     document.getElementById(`${type}Picker`).addEventListener('input', () => updateColor(type));
     document.getElementById(`${type}Input`).addEventListener('change', () => updateColorFromInput(type));
-  });
-
-  ['Icon', 'Bg'].forEach(type => {
-    document.getElementById(`darkMode${type}Picker`).addEventListener('input', () => updateDarkModeColor(type));
-    document.getElementById(`darkMode${type}Input`).addEventListener('change', () => updateDarkModeColorFromInput(type));
   });
 
   document.getElementById('addAccent').addEventListener('change', updatePreview);
